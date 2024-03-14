@@ -4,84 +4,79 @@ const express = require("express")
 const app = express()
 const port = 3000
 
-const users = []
+const products = []
 
 //middleware
 app.use(express.json())
 
-app.get('/users', (req, res) => {
-    res.json({ message: users })
+app.get('/products', (req, res) => {
+    res.json({ message: products })
 })
 
-app.get('/users/:emailId', (req, res) => {
-    const { emailId} = req.params
+app.get('/products/:Id', (req, res) => {
+    const { Id} = req.params
 
-    const user = users.find(user => user.email === emailId)
+    const product = products.find(product => product.Id === Id)
 
-    if(!user) return res.status(404).json({ error: 'User not found' })
+    if(!product) return res.status(404).json({ error: 'Product not found' })
 
-    res.json({ message: user })
+    res.json({ message: product })
 })
 
-app.post('/users', (req, res) => {
-    const { name,  lastname, email } = req.body
+app.post('/products', (req, res) => {
+    const { Id } = req.body
 
-    const newUser = {
-        name, 
-        lastname, 
-        email
+    const newProduct = {
+        Id, 
     }
 })
 
-users.push(newUser)
+products.push(newProduct)
 
-res.status(201).json({ message: 'User created' })
+res.status(201).json({ message: 'Product created' })
 
 //TODOS LOS CAMPOS TIENEN QUE LLEGAR, SI NO LLEGA ALGUNO SE COLOCA ERROR 400
-app.put('/users/:emailId', (req, res) => {
-    const { emailId } = req.params
+app.put('/products/:Id', (req, res) => {
+    const { Id } = req.params
     const { name, lastname, email } = req.body
 
     if(!name || !lastname || !email) return res.status(400).json({ error: 'Bad request' })
 
-    const user = users.find(user => user.email === emailId)
+    const product = products.find(product => product.Id === Id)
 
-    if(!user) return res.status(404).json({ error: 'User not found' })
+    if(!product) return res.status(404).json({ error: 'Product not found' })
 
-    user.name = name
-    user.lastname = lastname
-    user.email = email
+    product.name = name
+    //product.lastname = lastname
+    //product.email = email
 
-    res.json({ message: 'User updated' })
+    res.json({ message: 'Product updated' })
 })
 
 //SI QUIERO SOLAMENTE ACTUALIZAR UN ITEM
-app.path('/users/:emailId', (req, res) => {
-    const { emailId } = req.params
-    const { name, lastname, email } = req.body
+app.path('/products/:Id', (req, res) => {
+    const { Id } = req.body
 
-    if(!name || !lastname || !email) return res.status(400).json({ error: 'Bad request' })
+    if(!Id) return res.status(400).json({ error: 'Bad request' })
 
-    const user = users.find(user => user.email === emailId)
+    const product = products.find(product => product.Id === Id)
 
-    if(!user) return res.status(404).json({ error: 'User not found' })
+    if(!product) return res.status(404).json({ error: 'Product not found' })
 
-    user.name = name
-    user.lastname = lastname
-    user.email = email
+    product.Id = Id
 
-    res.json({ message: 'User updated' })
+    res.json({ message: 'Product updated' })
 })
 
-app.delete('/users/:emailId', (req, res) => {
-    const { emailId } = req.params
+app.delete('/products/:Id', (req, res) => {
+    const { Id } = req.params
 
-    const userIndex = users.findIndex(user => user.email === emailId)
-    if(userIndex === -1) return res.status(404).json({ error: 'User not found' })
+    const productIndex = products.findIndex(product => product.Id === Id)
+    if(productIndex === -1) return res.status(404).json({ error: 'Product not found' })
 
-    users.splice(userIndex, 1)
+    products.splice(productIndex, 1)
 
-    res.json({ message: 'User deleted' })
+    res.json({ message: 'Product deleted' })
 })
 
 app.get('*', (req, res) => {
